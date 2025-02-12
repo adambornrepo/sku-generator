@@ -7,7 +7,6 @@ import { ProductTab } from "@/components/product-tab"
 import { NewProductDialog } from "@/components/new-product-dialog"
 import { useToast } from "@/hooks/use-toast"
 import { nanoid } from "nanoid"
-import { Header } from "@/components/header"
 
 export default function Home() {
   const [products, setProducts] = useState([])
@@ -53,8 +52,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
+    <div className="min-h-[cal(100vh_-_56px)] flex flex-col">
       <main className="flex-1 container mx-auto py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="flex items-center">
@@ -66,7 +64,7 @@ export default function Home() {
             <Button 
               variant="ghost" 
               onClick={() => setIsNewProductOpen(true)}
-              className="ml-2 text-black border  hover:text-white hover:bg-green-700 h-7"
+              className="ml-2 border text-black dark:text-white hover:text-white hover:bg-green-700 h-7"
             >
               New Product
             </Button>
