@@ -59,27 +59,36 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Variantlar</CardTitle>
+      <div className="flex justify-between items-center">
+        <CardTitle className="font-light">Variantlar</CardTitle>
+        <Button
+          variant="outline"
+          onClick={() => setDialogState({ isOpen: true, editingVariant: null })}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Variant Ekle
+        </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         {variants.map((variant) => {
           const sku = generateSku(variant)
           return (
-            <div key={variant.id} className="flex items-center gap-4 p-4 border rounded-lg">
+            <div key={variant.id} className="flex flex-col md:flex-row md:items-center gap-2 p-3 border rounded-lg">
               <div className="flex-1">
                 <h4 className="font-medium">{variant.name}</h4>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {variant.pieceIds.map(pieceId => {
                     const piece = pieces.find(p => p.id === pieceId)
                     return piece ? (
-                      <Badge key={piece.id} variant="secondary">
+                      <Badge key={piece.id} variant="success">
                         {piece.name}
                       </Badge>
                     ) : null
                   })}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <div className="px-4 py-2 bg-muted rounded text-sm font-mono">
                   {sku}
                 </div>
@@ -87,6 +96,8 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
                   variant="outline"
                   size="icon"
                   onClick={() => copyToClipboard(sku)}
+                  title="Copy SKU"
+                  className="shrink-0"
                 >
                   <Clipboard className="h-4 w-4" />
                 </Button>
@@ -97,6 +108,8 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
                     isOpen: true,
                     editingVariant: variant
                   })}
+                  title="Edit Variant"
+                  className="shrink-0"
                 >
                   <Pencil className="h-4 w-4" />
                 </Button>
@@ -104,6 +117,8 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
                   variant="destructive"
                   size="icon"
                   onClick={() => handleDeleteVariant(variant.id)}
+                  title="Delete Variant"
+                  className="shrink-0"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -111,15 +126,6 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
             </div>
           )
         })}
-        
-        <Button
-          variant="outline"
-          onClick={() => setDialogState({ isOpen: true, editingVariant: null })}
-          className="w-full"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Variant Ekle
-        </Button>
       </CardContent>
 
       <VariantDialog

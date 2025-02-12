@@ -69,11 +69,20 @@ export function PiecesList({ pieces, variants, onUpdate }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Parçalar</CardTitle>
+        <div className="flex items-center justify-between">
+        <CardTitle className="font-light" >Parçalar</CardTitle>
+        <Button
+          variant="outline"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Parça Ekle
+        </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         {pieces.map((piece) => (
-          <div key={piece.id} className="flex items-center gap-4">
+          <div key={piece.id} className="flex items-center gap-2">
             <Switch
               checked={piece.isActive}
               onCheckedChange={() => handleToggleActive(piece.id)}
@@ -81,32 +90,24 @@ export function PiecesList({ pieces, variants, onUpdate }) {
             <Input
               value={piece.name}
               readOnly
-              className="flex-1"
+              className="flex-1 min-w-24"
             />
             <Input
               value={piece.value}
               onChange={(e) => handleValueChange(piece.id, e.target.value)}
               placeholder="SKU değeri"
-              className="w-32"
+              className="min-w-24 w-44"
             />
             <Button
               variant="destructive"
               size="icon"
               onClick={() => handleDeletePiece(piece.id)}
+              className="shrink-0"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         ))}
-        
-        <Button
-          variant="outline"
-          onClick={() => setIsDialogOpen(true)}
-          className="w-full"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Parça Ekle
-        </Button>
       </CardContent>
 
       <NewPieceDialog

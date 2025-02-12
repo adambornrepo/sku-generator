@@ -9,6 +9,7 @@ import { VariantsList } from "./variants-list"
 import { SkuTable } from "./sku-table"
 import { useToast } from "@/hooks/use-toast"
 import { useState } from "react"
+import { Label } from "@/components/ui/label"
 
 export function ProductTab({ product, onUpdate, onDelete }) {
   const { toast } = useToast()
@@ -50,47 +51,53 @@ export function ProductTab({ product, onUpdate, onDelete }) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Tanımlamalar</CardTitle>
+          <div className="flex justify-between items-center">
+            <CardTitle className="font-light">Tanımlamalar</CardTitle>
+            <Button 
+              variant="destructive" 
+              onClick={handleDeleteProduct}
+              className="ml-4"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Ürünü Sil
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label>İsim</label>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="space-y-1">
+              <Label htmlFor="name" >İsim:</Label>
               <Input
+                id="name"
                 value={localProduct.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
               />
             </div>
-            <div className="space-y-2">
-              <label>Base SKU</label>
+            <div className="space-y-1">
+              <Label htmlFor="baseSku" >Base SKU:</Label>
               <Input
+                id="baseSku"
                 value={localProduct.baseSku}
                 onChange={(e) => handleInputChange("baseSku", e.target.value)}
               />
             </div>
-            <div className="space-y-2">
-              <label>Ayraç</label>
+            <div className="space-y-1">
+              <Label htmlFor="delimiter" >Ayraç:</Label>
               <Input
+                id="delimiter"
                 value={localProduct.delimiter}
                 onChange={(e) => handleInputChange("delimiter", e.target.value)}
               />
             </div>
-            <div className="space-y-2">
-              <label>Set Öneki</label>
+            <div className="space-y-1">
+              <Label htmlFor="setPrefix" >Set Öneki:</Label>
               <Input
+                id="setPrefix"
                 value={localProduct.setPrefix}
                 onChange={(e) => handleInputChange("setPrefix", e.target.value)}
               />
             </div>
           </div>
-          <Button 
-            variant="destructive" 
-            onClick={handleDeleteProduct}
-            className="w-full mt-4"
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Ürünü Sil
-          </Button>
         </CardContent>
       </Card>
 

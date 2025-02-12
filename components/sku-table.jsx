@@ -35,31 +35,40 @@ export function SkuTable({ variants, generateSku }) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>SKU Tablosu</CardTitle>
+          <CardTitle className="font-light">SKU Tablosu</CardTitle>
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopyTable}
+              title="Copy Table"
             >
-              <FileText className="mr-2 h-4 w-4" />
+              <FileText className="h-4 w-4" />
+              <span className="hidden sm:inline-block">
               Tabloyu Kopyala
+              </span>
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopyNames}
+              title="Copy Names"
             >
-              <ClipboardList className="mr-2 h-4 w-4" />
+              <ClipboardList className="h-4 w-4" />
+              <span className="hidden sm:inline-block">
               İsimleri Kopyala
+              </span>
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopySkus}
+              title="Copy SKUs"
             >
-              <ClipboardCheck className="mr-2 h-4 w-4" />
+              <ClipboardCheck className="h-4 w-4" />
+              <span className="hidden sm:inline-block">
               SKU'ları Kopyala
+              </span>
             </Button>
           </div>
         </div>

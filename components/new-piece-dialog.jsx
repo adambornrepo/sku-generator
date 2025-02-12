@@ -1,9 +1,12 @@
-import { Dialog, DialogContent, DialogHeader, DialogDescription,  DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useToast } from "@/hooks/use-toast"
 import { useState } from "react"
 
 export function NewPieceDialog({ open, onOpenChange, onSubmit }) {
+  const { toast } = useToast()
   const [name, setName] = useState("")
   const [value, setValue] = useState("")
 
@@ -14,6 +17,10 @@ export function NewPieceDialog({ open, onOpenChange, onSubmit }) {
       setName("")
       setValue("")
       onOpenChange(false)
+      toast({
+        title: "Parça eklendi",
+        description: `${name} başarıyla eklendi.`
+      })
     }
   }
 
@@ -28,26 +35,24 @@ export function NewPieceDialog({ open, onOpenChange, onSubmit }) {
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="name" className="text-right text-xs">
+            <div className="grid gap-1.5">
+              <Label htmlFor="name">
                 Parça Adı:
-              </label>
+              </Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="col-span-3"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <label htmlFor="value" className="text-right text-xs">
+            <div className="grid gap-1.5">
+              <Label htmlFor="value">
                 SKU Değeri:
-              </label>
+              </Label>
               <Input
                 id="value"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                className="col-span-3"
                 placeholder="-BD"
               />
             </div>

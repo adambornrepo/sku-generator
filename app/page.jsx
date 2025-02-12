@@ -7,6 +7,7 @@ import { ProductTab } from "@/components/product-tab"
 import { NewProductDialog } from "@/components/new-product-dialog"
 import { useToast } from "@/hooks/use-toast"
 import { nanoid } from "nanoid"
+import { Header } from "@/components/header"
 
 export default function Home() {
   const [products, setProducts] = useState([])
@@ -52,54 +53,55 @@ export default function Home() {
   }
 
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-3xl font-bold text-center mb-8">SKU GENERATOR</h1>
-      
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="flex items-center">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 container mx-auto py-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="flex items-center">
+            {products.map((product) => (
+              <TabsTrigger key={product.id} value={product.id}>
+                {product.name}
+              </TabsTrigger>
+            ))}
+            <Button 
+              variant="ghost" 
+              onClick={() => setIsNewProductOpen(true)}
+              className="ml-2 text-black border  hover:text-white hover:bg-green-700 h-7"
+            >
+              New Product
+            </Button>
+          </TabsList>
+
           {products.map((product) => (
-            <TabsTrigger key={product.id} value={product.id}>
-              {product.name}
-            </TabsTrigger>
+            <TabsContent key={product.id} value={product.id}>
+              <ProductTab 
+                product={product}
+                onUpdate={(updatedProduct) => {
+                  const newProducts = products.map(p => 
+                    p.id === updatedProduct.id ? updatedProduct : p
+                  )
+                  setProducts(newProducts)
+                  saveToLocalStorage(newProducts)
+                }}
+                onDelete={(productId) => {
+                  const newProducts = products.filter(p => p.id !== productId)
+                  setProducts(newProducts)
+                  saveToLocalStorage(newProducts)
+                  if (newProducts.length > 0) {
+                    setActiveTab(newProducts[0].id)
+                  }
+                }}
+              />
+            </TabsContent>
           ))}
-          <Button 
-            variant="outline" 
-            onClick={() => setIsNewProductOpen(true)}
-            className="ml-2"
-          >
-            New Product
-          </Button>
-        </TabsList>
+        </Tabs>
 
-        {products.map((product) => (
-          <TabsContent key={product.id} value={product.id}>
-            <ProductTab 
-              product={product}
-              onUpdate={(updatedProduct) => {
-                const newProducts = products.map(p => 
-                  p.id === updatedProduct.id ? updatedProduct : p
-                )
-                setProducts(newProducts)
-                saveToLocalStorage(newProducts)
-              }}
-              onDelete={(productId) => {
-                const newProducts = products.filter(p => p.id !== productId)
-                setProducts(newProducts)
-                saveToLocalStorage(newProducts)
-                if (newProducts.length > 0) {
-                  setActiveTab(newProducts[0].id)
-                }
-              }}
-            />
-          </TabsContent>
-        ))}
-      </Tabs>
-
-      <NewProductDialog 
-        open={isNewProductOpen}
-        onOpenChange={setIsNewProductOpen}
-        onSubmit={handleCreateProduct}
-      />
+        <NewProductDialog 
+          open={isNewProductOpen}
+          onOpenChange={setIsNewProductOpen}
+          onSubmit={handleCreateProduct}
+        />
+      </main>
     </div>
   )
 } 
