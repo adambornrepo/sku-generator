@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +22,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-const SortableBadge = ({ piece, isActive }) => {
+const SortableBadge = ({ piece, quantity, isActive }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: piece.id });
 
@@ -41,8 +39,18 @@ const SortableBadge = ({ piece, isActive }) => {
       {...attributes}
       {...listeners}
       variant={isActive ? "success" : ""}
+      className="flex items-center p-0 border-0 overflow-hidden"
     >
-      {piece.name}
+      {quantity > 1 && (
+        <span
+          className={`border-r border-emerald-600 px-2 text-sm tracking-wider ${
+            isActive ? "bg-emerald-900" : "bg-background/20"
+          }`}
+        >
+          {quantity}
+        </span>
+      )}
+      <span className=" px-2 text-sm tracking-wider">{piece.name}</span>
     </Badge>
   );
 };
@@ -63,8 +71,8 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
     const { active, over } = event;
     if (active.id !== over.id) {
       const variant = variants.find((v) => v.id === variantId);
-      const oldIndex = variant.pieceIds.indexOf(active.id);
-      const newIndex = variant.pieceIds.indexOf(over.id);
+      const oldIndex = variant.pieceIds.findIndex((p) => p.id === active.id);
+      const newIndex = variant.pieceIds.findIndex((p) => p.id === over.id);
 
       const newPieceIds = arrayMove(variant.pieceIds, oldIndex, newIndex);
       const updatedVariants = variants.map((v) =>
@@ -80,11 +88,11 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
     }
   };
 
-  const handleAddVariant = (name, selectedPieceIds) => {
+  const handleAddVariant = (name, selectedPieces) => {
     const newVariant = {
       id: nanoid(),
       name,
-      pieceIds: selectedPieceIds,
+      pieceIds: selectedPieces,
     };
     onUpdate([...variants, newVariant]);
     toast({
@@ -93,11 +101,11 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
     });
   };
 
-  const handleEditVariant = (id, name, selectedPieceIds) => {
+  const handleEditVariant = (id, name, selectedPieces) => {
     onUpdate(
       variants.map((variant) =>
         variant.id === id
-          ? { ...variant, name, pieceIds: selectedPieceIds }
+          ? { ...variant, name, pieceIds: selectedPieces }
           : variant
       )
     );
@@ -153,16 +161,19 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
                     onDragEnd={(event) => handleDragEnd(event, variant.id)}
                   >
                     <SortableContext
-                      items={variant.pieceIds}
+                      items={variant.pieceIds.map((p) => p.id)}
                       strategy={horizontalListSortingStrategy}
                     >
                       <div className="flex flex-wrap gap-2 mt-2">
-                        {variant.pieceIds.map((pieceId) => {
-                          const piece = pieces.find((p) => p.id === pieceId);
+                        {variant.pieceIds.map((pieceData) => {
+                          const piece = pieces.find(
+                            (p) => p.id === pieceData.id
+                          );
                           return piece ? (
                             <SortableBadge
                               key={piece.id}
                               piece={piece}
+                              quantity={pieceData.quantity}
                               isActive={piece.isActive}
                             />
                           ) : null;
@@ -172,7 +183,7 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
                   </DndContext>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="px-4 py-2 bg-muted rounded text-sm font-mono">
+                  <div className="px-4 py-1 h-8 bg-muted rounded text-sm font-mono flex items-center">
                     {sku}
                   </div>
                   <Button

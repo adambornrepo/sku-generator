@@ -28,38 +28,54 @@ export function VariantDialog({
   editingVariant,
 }) {
   const [name, setName] = useState("");
-  const [selectedPieceIds, setSelectedPieceIds] = useState([]);
+  const [selectedPieces, setSelectedPieces] = useState([]);
   const [selectedPiece, setSelectedPiece] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     if (editingVariant) {
       setName(editingVariant.name);
-      setSelectedPieceIds(editingVariant.pieceIds);
+      // Convert old format to new format if necessary
+      const pieces = Array.isArray(editingVariant.pieceIds)
+        ? editingVariant.pieceIds.map((id) =>
+            typeof id === "string" ? { id, quantity: 1 } : id
+          )
+        : [];
+      setSelectedPieces(pieces);
     } else {
       setName("");
-      setSelectedPieceIds([]);
+      setSelectedPieces([]);
     }
   }, [editingVariant]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (name.trim() && selectedPieceIds.length > 0) {
-      onSubmit(name.trim(), selectedPieceIds);
+    if (name.trim() && selectedPieces.length > 0) {
+      onSubmit(name.trim(), selectedPieces);
       setName("");
-      setSelectedPieceIds([]);
+      setSelectedPieces([]);
       onOpenChange(false);
     }
   };
 
   const handleAddPiece = () => {
-    if (selectedPiece && !selectedPieceIds.includes(selectedPiece)) {
-      setSelectedPieceIds([...selectedPieceIds, selectedPiece]);
+    if (
+      selectedPiece &&
+      !selectedPieces.some((piece) => piece.id === selectedPiece)
+    ) {
+      setSelectedPieces([...selectedPieces, { id: selectedPiece, quantity }]);
       setSelectedPiece("");
+      setQuantity(1); // Reset quantity to default after adding
     }
   };
 
   const handleRemovePiece = (pieceId) => {
-    setSelectedPieceIds(selectedPieceIds.filter((id) => id !== pieceId));
+    setSelectedPieces(selectedPieces.filter((piece) => piece.id !== pieceId));
+  };
+
+  const handleQuantityChange = (e) => {
+    const value = parseInt(e.target.value) || 1;
+    setQuantity(Math.max(1, value)); // Ensure minimum value is 1
   };
 
   return (
@@ -90,22 +106,30 @@ export function VariantDialog({
             <div className="grid gap-1.5">
               <Label>Selected Pieces:</Label>
               <div className="flex flex-wrap gap-2 min-h-[40px] p-2 border rounded-md">
-                {selectedPieceIds.map((pieceId) => {
-                  const piece = availablePieces.find((p) => p.id === pieceId);
-                  return piece ? (
-                    <Badge
-                      key={piece.id}
-                      className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-0 p-0 overflow-hidden rounded-lg"
-                    >
-                      <div className="pl-2">{piece.name}</div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemovePiece(piece.id)}
-                        className="ml-1 h-full px-1 hover:text-destructive/90 transition-colors hover:bg-primary/30"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </Badge>
+                {selectedPieces.map((piece) => {
+                  const pieceInfo = availablePieces.find(
+                    (p) => p.id === piece.id
+                  );
+                  return pieceInfo ? (
+                    <div key={pieceInfo.id} className="relative h-5">
+                      {piece.quantity > 1 && (
+                        <div className="absolute -top-1 -left-1 bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center text-[10px] shadow shadow-primary/50">
+                          {piece.quantity}
+                        </div>
+                      )}
+                      <Badge className="bg-primary/10 h-full text-primary hover:bg-primary/20 transition-colors border-0 p-0 overflow-hidden rounded-lg">
+                        <div className="pl-4 text-xs tracking-wider flex items-center">
+                          {pieceInfo.name}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemovePiece(pieceInfo.id)}
+                          className="ml-1 h-full px-1 hover:text-destructive/90 transition-colors hover:bg-primary/30"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    </div>
                   ) : null;
                 })}
               </div>
@@ -117,7 +141,10 @@ export function VariantDialog({
                   </SelectTrigger>
                   <SelectContent>
                     {availablePieces
-                      .filter((piece) => !selectedPieceIds.includes(piece.id))
+                      .filter(
+                        (piece) =>
+                          !selectedPieces.some((p) => p.id === piece.id)
+                      )
                       .map((piece) => (
                         <SelectItem key={piece.id} value={piece.id}>
                           {piece.name}
@@ -125,6 +152,14 @@ export function VariantDialog({
                       ))}
                   </SelectContent>
                 </Select>
+                <Input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  className="w-20"
+                />
                 <Button
                   type="button"
                   variant="info"

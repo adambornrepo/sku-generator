@@ -41,7 +41,9 @@ export function PiecesList({ pieces, variants, onUpdate }) {
   };
 
   const handleDeletePiece = (pieceId) => {
-    const isUsedInVariant = variants.some((v) => v.pieceIds.includes(pieceId));
+    const isUsedInVariant = variants.some((variant) =>
+      variant.pieceIds.some((piece) => piece.id === pieceId)
+    );
 
     if (isUsedInVariant) {
       setPieceToDelete(pieceId);
@@ -57,10 +59,6 @@ export function PiecesList({ pieces, variants, onUpdate }) {
 
   const confirmDelete = () => {
     if (pieceToDelete) {
-      const updatedVariants = variants.map((variant) => ({
-        ...variant,
-        pieceIds: variant.pieceIds.filter((id) => id !== pieceToDelete),
-      }));
       onUpdate(pieces.filter((p) => p.id !== pieceToDelete));
       setPieceToDelete(null);
       setIsAlertOpen(false);

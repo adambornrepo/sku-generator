@@ -44,12 +44,15 @@ export function ProductTab({ product, onUpdate, onDelete }) {
 
   const generateSkuForVariant = (variant) => {
     const pieces = variant.pieceIds
-      .map((pieceId) => {
-        const piece = localProduct.pieces.find((p) => p.id === pieceId);
+      .map((variantPiece) => {
+        const piece = localProduct.pieces.find((p) => p.id === variantPiece.id);
 
         if (!piece || !piece.isActive) return "";
 
-        return `${localProduct.baseSku}${piece.value}`;
+        const quantity =
+          variantPiece.quantity > 1 ? `(${variantPiece.quantity})` : "";
+
+        return `${localProduct.baseSku}${piece.value}${quantity}`;
       })
       .filter(Boolean);
 
