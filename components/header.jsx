@@ -41,7 +41,7 @@ export function Header() {
             className="h-9 w-9 group" 
             onClick={() => setIsDarkMode(!isDarkMode)}
           >
-            <SunIcon className={`group-hover:animate-spin transition-transform duration-300 ${isDarkMode ? 'block' : 'hidden'} h-4 w-4`} />
+            <SunIcon className={`group-hover:animate-swing transition-transform duration-300 ${isDarkMode ? 'block' : 'hidden'} h-4 w-4`} />
             <MoonIcon className={`group-hover:animate-pulse transition-transform duration-300 ${isDarkMode ? 'hidden' : 'block'} h-4 w-4`} />
             <span className="sr-only">Toggle theme</span>
           </Button>

@@ -55,7 +55,25 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		  screens: {
+			xs: "480px",
+		  },
+		  animation: {
+			gradient: "gradient 2s linear infinite",
+			swing: "swing 1s linear infinite",
+		  },
+		  keyframes: {
+			gradient: {
+			  to: { "background-position": "200% center" },
+			},
+			swing: {
+			  "0%": { transform: "rotate(0deg)" },
+			  "25%": { transform: "rotate(15deg)" },
+			  "75%": { transform: "rotate(-15deg)" },
+			  "100%": { transform: "rotate(0deg)" },
+			},
+		  }
   	}
   },
   plugins: [require("tailwindcss-animate")],

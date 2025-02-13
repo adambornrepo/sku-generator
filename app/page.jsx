@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { ProductTab } from "@/components/product-tab"
 import { NewProductDialog } from "@/components/new-product-dialog"
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast"
 import { nanoid } from "nanoid"
 
