@@ -74,9 +74,9 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
         {variants.map((variant) => {
           const sku = generateSku(variant)
           return (
-            <div className=" p-3 border rounded-lg">
+            <div key={variant.id} className=" p-3 border rounded-lg">
                 <h4 className="font-medium">{variant.name}</h4>
-            <div key={variant.id} className="flex flex-col md:flex-row md:items-center gap-2">
+            <div className="flex flex-col md:flex-row md:items-center gap-2">
               <div className="flex-1">
                 <div className="flex flex-wrap gap-2 mt-2">
                   {variant.pieceIds.map(pieceId => {

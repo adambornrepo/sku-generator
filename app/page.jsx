@@ -53,7 +53,6 @@ export default function Home() {
   }
 
   return (
-    <ScrollArea className="h-full flex flex-col">
       <main className="min-h-[cal(100vh_-_56px)]  flex-1 container mx-auto py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="flex items-center">
@@ -101,6 +100,5 @@ export default function Home() {
           onSubmit={handleCreateProduct}
         />
       </main>
-    </ScrollArea>
   )
 } 
