@@ -29,7 +29,6 @@ const SortableBadge = ({ piece, quantity, isActive }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    cursor: "grab",
   };
 
   return (
@@ -39,7 +38,7 @@ const SortableBadge = ({ piece, quantity, isActive }) => {
       {...attributes}
       {...listeners}
       variant={isActive ? "success" : ""}
-      className="flex items-center p-0 border-0 overflow-hidden"
+      className="flex items-center p-0 border-0 overflow-hidden cursor-grab active:cursor-grabbing active:z-50"
     >
       {quantity > 1 && (
         <span
@@ -183,7 +182,7 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
                   </DndContext>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="px-4 py-1 h-8 bg-muted rounded text-sm font-mono flex items-center">
+                  <div className="px-4 py-1 min-h-8 h-fit bg-muted rounded text-sm font-mono flex items-center">
                     {sku}
                   </div>
                   <Button
