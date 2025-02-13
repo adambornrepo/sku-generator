@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SKU Generator
 
-## Getting Started
+SKU Generator is a web application designed to create and manage Stock Keeping Units (SKUs) for product pieces and variants. This tool simplifies the process of generating unique identifiers for inventory management, making it easier for businesses to track their products.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Generate SKUs for various product pieces and variants.
+- User-friendly interface for easy navigation.
+- Responsive design for optimal viewing on different devices.
+- Integration with various components for enhanced functionality.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js**: A React framework for building server-side rendered applications.
+- **TypeScript**: A superset of JavaScript that adds static types.
+- **React**: A JavaScript library for building user interfaces.
+- **CSS**: For styling the application.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Installation
 
-## Learn More
+To get started with the SKU Generator, follow these steps:
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/sku-generator.git
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Navigate to the project directory:
+   ```bash
+   cd sku-generator
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Install the dependencies:
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. Open your browser and go to `http://localhost:3000`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Usage
+
+Once the application is running, you can:
+
+- Navigate through the application using the header.
+- Use the SKU generation features to create new SKUs for your products.
+- Manage existing SKUs and view them in a structured format.
+
+## Contributing
+
+Contributions are welcome! If you have suggestions for improvements or new features, please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
