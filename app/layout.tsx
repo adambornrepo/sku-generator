@@ -1,11 +1,11 @@
 import { Inter } from "next/font/google";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import { Metadata } from "next";
-import { Header } from "@/components/header"
+import { Header } from "@/components/header";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import "./globals.css";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SKU | Generator",
@@ -19,11 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.className}>
-      <body
-        className={`antialiased`}
-      >
+      <body className={`antialiased`}>
         <ScrollArea className="h-screen flex flex-col">
-        <Header />
+          <Header />
           {children}
         </ScrollArea>
         <Toaster />

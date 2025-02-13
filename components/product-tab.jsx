@@ -1,52 +1,64 @@
-"use client"
+"use client";
 
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Trash2, Plus, Clipboard, FileText } from "lucide-react"
-import { PiecesList } from "./pieces-list"
-import { VariantsList } from "./variants-list"
-import { SkuTable } from "./sku-table"
-import { useToast } from "@/hooks/use-toast"
-import { useState } from "react"
-import { Label } from "@/components/ui/label"
-import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel, AlertDialogFooter } from "@/components/ui/alert-dialog"
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Trash2, Plus, Clipboard, FileText } from "lucide-react";
+import { PiecesList } from "./pieces-list";
+import { VariantsList } from "./variants-list";
+import { SkuTable } from "./sku-table";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { Label } from "@/components/ui/label";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
 
 export function ProductTab({ product, onUpdate, onDelete }) {
-  const { toast } = useToast()
-  const [localProduct, setLocalProduct] = useState(product)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { toast } = useToast();
+  const [localProduct, setLocalProduct] = useState(product);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleInputChange = (field, value) => {
-    const updatedProduct = { ...localProduct, [field]: value }
-    setLocalProduct(updatedProduct)
-    onUpdate(updatedProduct)
-  }
+    const updatedProduct = { ...localProduct, [field]: value };
+    setLocalProduct(updatedProduct);
+    onUpdate(updatedProduct);
+  };
 
   const handleDeleteProduct = () => {
-    onDelete(localProduct.id)
+    onDelete(localProduct.id);
     toast({
       title: "Product deleted",
-      description: `${localProduct.name} has been successfully deleted.`
-    })
-    setIsDialogOpen(false)
-  }
+      description: `${localProduct.name} has been successfully deleted.`,
+    });
+    setIsDialogOpen(false);
+  };
 
   const generateSkuForVariant = (variant) => {
     const pieces = variant.pieceIds
-      .map(pieceId => {
-        const piece = localProduct.pieces.find(p => p.id === pieceId)
+      .map((pieceId) => {
+        const piece = localProduct.pieces.find((p) => p.id === pieceId);
 
-        if(!piece || !piece.isActive) return "";
+        if (!piece || !piece.isActive) return "";
 
         return `${localProduct.baseSku}${piece.value}`;
       })
-      .filter(Boolean)
+      .filter(Boolean);
 
-    if (pieces.length === 0) return ""
-    
-    return `${localProduct.setPrefix}${localProduct.delimiter}${pieces.join(localProduct.delimiter)}`
-  }
+    if (pieces.length === 0) return "";
+
+    return `${localProduct.setPrefix}${localProduct.delimiter}${pieces.join(
+      localProduct.delimiter
+    )}`;
+  };
 
   return (
     <div className="space-y-6">
@@ -65,12 +77,17 @@ export function ProductTab({ product, onUpdate, onDelete }) {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Product</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to delete this product? All variants will be deleted.
+                    Are you sure you want to delete this product? All variants
+                    will be deleted.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeleteProduct}>Yes, delete</AlertDialogAction>
+                  <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteProduct}>
+                    Yes, delete
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
@@ -79,7 +96,7 @@ export function ProductTab({ product, onUpdate, onDelete }) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div className="space-y-1">
-              <Label htmlFor="name" >Name:</Label>
+              <Label htmlFor="name">Name:</Label>
               <Input
                 id="name"
                 value={localProduct.name}
@@ -87,7 +104,7 @@ export function ProductTab({ product, onUpdate, onDelete }) {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="baseSku" >Base SKU:</Label>
+              <Label htmlFor="baseSku">Base SKU:</Label>
               <Input
                 id="baseSku"
                 value={localProduct.baseSku}
@@ -95,7 +112,7 @@ export function ProductTab({ product, onUpdate, onDelete }) {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="delimiter" >Delimiter:</Label>
+              <Label htmlFor="delimiter">Delimiter:</Label>
               <Input
                 id="delimiter"
                 value={localProduct.delimiter}
@@ -103,7 +120,7 @@ export function ProductTab({ product, onUpdate, onDelete }) {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="setPrefix" >Set Prefix:</Label>
+              <Label htmlFor="setPrefix">Set Prefix:</Label>
               <Input
                 id="setPrefix"
                 value={localProduct.setPrefix}
@@ -132,5 +149,5 @@ export function ProductTab({ product, onUpdate, onDelete }) {
         generateSku={generateSkuForVariant}
       />
     </div>
-  )
-} 
+  );
+}

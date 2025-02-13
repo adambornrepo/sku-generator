@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
-import { Trash2, Plus } from "lucide-react"
-import { NewPieceDialog } from "./new-piece-dialog"
-import { useState } from "react"
-import { useToast } from "@/hooks/use-toast"
-import { nanoid } from "nanoid"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Trash2, Plus } from "lucide-react";
+import { NewPieceDialog } from "./new-piece-dialog";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { nanoid } from "nanoid";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,92 +18,85 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 export function PiecesList({ pieces, variants, onUpdate }) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [isAlertOpen, setIsAlertOpen] = useState(false)
-  const [pieceToDelete, setPieceToDelete] = useState(null)
-  const { toast } = useToast()
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [pieceToDelete, setPieceToDelete] = useState(null);
+  const { toast } = useToast();
 
   const handleAddPiece = (name, value) => {
     const newPiece = {
       id: nanoid(),
       name,
       value,
-      isActive: true
-    }
-    onUpdate([...pieces, newPiece])
+      isActive: true,
+    };
+    onUpdate([...pieces, newPiece]);
     toast({
       title: "The piece was added",
-      description: `${name} has been successfully added.`
-    })
-  }
+      description: `${name} has been successfully added.`,
+    });
+  };
 
-  
   const handleDeletePiece = (pieceId) => {
-    const isUsedInVariant = variants.some(v => v.pieceIds.includes(pieceId))
-    
+    const isUsedInVariant = variants.some((v) => v.pieceIds.includes(pieceId));
+
     if (isUsedInVariant) {
-      setPieceToDelete(pieceId)
-      setIsAlertOpen(true)
+      setPieceToDelete(pieceId);
+      setIsAlertOpen(true);
     } else {
-      onUpdate(pieces.filter(p => p.id !== pieceId))
+      onUpdate(pieces.filter((p) => p.id !== pieceId));
       toast({
         title: "Piece deleted",
-        description: "The piece has been successfully deleted."
-      })
+        description: "The piece has been successfully deleted.",
+      });
     }
-  }
+  };
 
   const confirmDelete = () => {
     if (pieceToDelete) {
-      const updatedVariants = variants.map(variant => ({
+      const updatedVariants = variants.map((variant) => ({
         ...variant,
-        pieceIds: variant.pieceIds.filter(id => id !== pieceToDelete)
-      }))
-      onUpdate(pieces.filter(p => p.id !== pieceToDelete))
-      setPieceToDelete(null)
-      setIsAlertOpen(false)
+        pieceIds: variant.pieceIds.filter((id) => id !== pieceToDelete),
+      }));
+      onUpdate(pieces.filter((p) => p.id !== pieceToDelete));
+      setPieceToDelete(null);
+      setIsAlertOpen(false);
       toast({
         title: "The piece was deleted",
-        description: "The piece was removed from the related variants and successfully deleted."
-      })
+        description:
+          "The piece was removed from the related variants and successfully deleted.",
+      });
     }
-  }
+  };
 
   const handleToggleActive = (pieceId) => {
     onUpdate(
-      pieces.map(piece =>
-        piece.id === pieceId
-          ? { ...piece, isActive: !piece.isActive }
-          : piece
+      pieces.map((piece) =>
+        piece.id === pieceId ? { ...piece, isActive: !piece.isActive } : piece
       )
-    )
-  }
+    );
+  };
 
   const handleValueChange = (pieceId, value) => {
     onUpdate(
-      pieces.map(piece =>
-        piece.id === pieceId
-          ? { ...piece, value }
-          : piece
+      pieces.map((piece) =>
+        piece.id === pieceId ? { ...piece, value } : piece
       )
-    )
-  }
+    );
+  };
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-        <CardTitle className="font-light" >Pieces</CardTitle>
-        <Button
-          variant="outline"
-          onClick={() => setIsDialogOpen(true)}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Piece
-        </Button>
+          <CardTitle className="font-light">Pieces</CardTitle>
+          <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Piece
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -113,11 +106,7 @@ export function PiecesList({ pieces, variants, onUpdate }) {
               checked={piece.isActive}
               onCheckedChange={() => handleToggleActive(piece.id)}
             />
-            <Input
-              value={piece.name}
-              readOnly
-              className="flex-1 min-w-24"
-            />
+            <Input value={piece.name} readOnly className="flex-1 min-w-24" />
             <Input
               value={piece.value}
               onChange={(e) => handleValueChange(piece.id, e.target.value)}
@@ -134,9 +123,9 @@ export function PiecesList({ pieces, variants, onUpdate }) {
             </Button>
           </div>
         ))}
-          {
-          pieces?.length === 0 && <div className="text-center text-sm">No pieces for this product</div>
-        }
+        {pieces?.length === 0 && (
+          <div className="text-center text-sm">No pieces for this product</div>
+        )}
       </CardContent>
 
       <NewPieceDialog
@@ -150,14 +139,17 @@ export function PiecesList({ pieces, variants, onUpdate }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Piece</AlertDialogTitle>
             <AlertDialogDescription>
-              This piece is used in one or more variants. Deleting it will also remove it from those variants. Are you sure you want to continue?
+              This piece is used in one or more variants. Deleting it will also
+              remove it from those variants. Are you sure you want to continue?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => {
-              setPieceToDelete(null)
-              setIsAlertOpen(false)
-            }}>
+            <AlertDialogCancel
+              onClick={() => {
+                setPieceToDelete(null);
+                setIsAlertOpen(false);
+              }}
+            >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete}>
@@ -167,5 +159,5 @@ export function PiecesList({ pieces, variants, onUpdate }) {
         </AlertDialogContent>
       </AlertDialog>
     </Card>
-  )
-} 
+  );
+}

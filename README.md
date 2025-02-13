@@ -21,21 +21,25 @@ SKU Generator is a web application designed to create and manage Stock Keeping U
 To get started with the SKU Generator, follow these steps:
 
 1. Clone the repository:
+
    ```bash
-   git clone https://github.com/yourusername/sku-generator.git
+   git clone https://github.com/adambornrepo/sku-generator.git
    ```
 
 2. Navigate to the project directory:
+
    ```bash
    cd sku-generator
    ```
 
 3. Install the dependencies:
+
    ```bash
    npm install
    ```
 
 4. Start the development server:
+
    ```bash
    npm run dev
    ```
