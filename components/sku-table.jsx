@@ -12,8 +12,8 @@ export function SkuTable({ variants, generateSku }) {
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
     toast({
-      title: "Kopyalandı",
-      description: "Veriler panoya kopyalandı."
+      title: "Copied",
+      description: "Data copied to clipboard."
     })
   }
 
@@ -35,17 +35,18 @@ export function SkuTable({ variants, generateSku }) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="font-light">SKU Tablosu</CardTitle>
+          <CardTitle className="font-light">SKU Table</CardTitle>
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopyTable}
               title="Copy Table"
+              disabled={variants?.length === 0}
             >
               <FileText className="h-4 w-4" />
               <span className="hidden sm:inline-block">
-              Tabloyu Kopyala
+              Copy Table
               </span>
             </Button>
             <Button
@@ -53,10 +54,11 @@ export function SkuTable({ variants, generateSku }) {
               size="sm"
               onClick={handleCopyNames}
               title="Copy Names"
+              disabled={variants?.length === 0}
             >
               <ClipboardList className="h-4 w-4" />
               <span className="hidden sm:inline-block">
-              İsimleri Kopyala
+              Copy Names
               </span>
             </Button>
             <Button
@@ -64,16 +66,18 @@ export function SkuTable({ variants, generateSku }) {
               size="sm"
               onClick={handleCopySkus}
               title="Copy SKUs"
+              disabled={variants?.length === 0}
             >
               <ClipboardCheck className="h-4 w-4" />
               <span className="hidden sm:inline-block">
-              SKU'ları Kopyala
+              Copy SKUs
               </span>
             </Button>
           </div>
         </div>
       </CardHeader>
       <CardContent>
+        {variants?.length > 0 ? 
         <Table>
           <TableHeader>
             <TableRow>
@@ -90,6 +94,9 @@ export function SkuTable({ variants, generateSku }) {
             ))}
           </TableBody>
         </Table>
+      :
+      <div className="text-center text-sm">No data to display</div>
+      }
       </CardContent>
     </Card>
   )

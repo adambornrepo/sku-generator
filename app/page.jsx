@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { ProductTab } from "@/components/product-tab"
 import { NewProductDialog } from "@/components/new-product-dialog"
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast"
 import { nanoid } from "nanoid"
 
@@ -46,14 +47,14 @@ export default function Home() {
     saveToLocalStorage(newProducts)
     
     toast({
-      title: "Ürün oluşturuldu",
-      description: `${name} başarıyla eklendi.`
+      title: "The product was added",
+      description: `${name} has been successfully added.`
     })
   }
 
   return (
-    <div className="min-h-[cal(100vh_-_56px)] flex flex-col">
-      <main className="flex-1 container mx-auto py-6">
+    <ScrollArea className="h-full flex flex-col">
+      <main className="min-h-[cal(100vh_-_56px)]  flex-1 container mx-auto py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="flex items-center">
             {products.map((product) => (
@@ -100,6 +101,6 @@ export default function Home() {
           onSubmit={handleCreateProduct}
         />
       </main>
-    </div>
+    </ScrollArea>
   )
 } 

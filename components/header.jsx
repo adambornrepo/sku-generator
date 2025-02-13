@@ -1,11 +1,19 @@
 "use client"
 
-import { MoonIcon, SunIcon } from "lucide-react"
+import { Barcode, MoonIcon, SunIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
+import { Share_Tech_Mono } from "next/font/google";
+
+const stm = Share_Tech_Mono({ 
+  subsets: ['latin'],
+  weight: ['400'], // İnce fontlar için
+  display: 'swap',
+})
 
 export function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
+
 
   useEffect(() => {
     const darkMode = localStorage.getItem("dark") === "true";
@@ -21,8 +29,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-14 items-center justify-between">
-        <div className="flex-1 flex">
-          <h1>SKU GENERATOR</h1>
+        <div className="flex-1 flex items-center">
+        <Barcode className="mr-2" />
+          <h1 className={`${stm.className} text-2xl m-0 p-0`}>SKU GENERATOR</h1>
         </div>
 
         <div className="flex-1 flex justify-end">

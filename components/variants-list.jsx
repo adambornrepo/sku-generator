@@ -21,8 +21,8 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
     }
     onUpdate([...variants, newVariant])
     toast({
-      title: "Variant eklendi",
-      description: `${name} başarıyla eklendi.`
+      title: "The variant was created",
+      description: `${name} has been successfully created.`
     })
   }
 
@@ -35,24 +35,24 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
       )
     )
     toast({
-      title: "Variant güncellendi",
-      description: `${name} başarıyla güncellendi.`
+      title: "The variant was updated",
+      description: `${name} has been successfully updated.`
     })
   }
 
   const handleDeleteVariant = (variantId) => {
     onUpdate(variants.filter(v => v.id !== variantId))
     toast({
-      title: "Variant silindi",
-      description: "Variant başarıyla silindi."
+      title: "The variant was deleted",
+      description: "Variant has been successfully deleted."
     })
   }
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
     toast({
-      title: "Kopyalandı",
-      description: "SKU panoya kopyalandı."
+      title: "Copied",
+      description: "SKU copied to clipboard."
     })
   }
 
@@ -66,7 +66,7 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
           onClick={() => setDialogState({ isOpen: true, editingVariant: null })}
         >
           <Plus className="mr-2 h-4 w-4" />
-          Variant Ekle
+          Create Variant
         </Button>
         </div>
       </CardHeader>
@@ -74,14 +74,15 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
         {variants.map((variant) => {
           const sku = generateSku(variant)
           return (
-            <div key={variant.id} className="flex flex-col md:flex-row md:items-center gap-2 p-3 border rounded-lg">
-              <div className="flex-1">
+            <div className=" p-3 border rounded-lg">
                 <h4 className="font-medium">{variant.name}</h4>
+            <div key={variant.id} className="flex flex-col md:flex-row md:items-center gap-2">
+              <div className="flex-1">
                 <div className="flex flex-wrap gap-2 mt-2">
                   {variant.pieceIds.map(pieceId => {
                     const piece = pieces.find(p => p.id === pieceId)
                     return piece ? (
-                      <Badge key={piece.id} variant="success">
+                      <Badge key={piece.id} variant={piece.isActive ? "success": ""}>
                         {piece.name}
                       </Badge>
                     ) : null
@@ -123,9 +124,13 @@ export function VariantsList({ variants, pieces, onUpdate, generateSku }) {
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
+              </div>
             </div>
           )
         })}
+        {
+          variants?.length === 0 && <div className="text-center text-sm">No variants for this product</div>
+        }
       </CardContent>
 
       <VariantDialog

@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { X } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
 import {
   Select,
   SelectContent,
@@ -15,7 +14,6 @@ import {
 import { useState, useEffect } from "react"
 
 export function VariantDialog({ open, onOpenChange, onSubmit, availablePieces, editingVariant }) {
-  const { toast } = useToast()
   const [name, setName] = useState("")
   const [selectedPieceIds, setSelectedPieceIds] = useState([])
   const [selectedPiece, setSelectedPiece] = useState("")
@@ -37,10 +35,6 @@ export function VariantDialog({ open, onOpenChange, onSubmit, availablePieces, e
       setName("")
       setSelectedPieceIds([])
       onOpenChange(false)
-      toast({
-        title: editingVariant ? "Variant güncellendi" : "Variant eklendi",
-        description: `${name} başarıyla ${editingVariant ? 'güncellendi' : 'eklendi'}.`
-      })
     }
   }
 
@@ -60,31 +54,31 @@ export function VariantDialog({ open, onOpenChange, onSubmit, availablePieces, e
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-sm uppercase tracking-wide">
-            {editingVariant ? "Variant Düzenle" : "Yeni Variant Ekle"}
+            {editingVariant ? "Edit Variant" : "Create New Variant"}
           </DialogTitle>
           <DialogDescription className="text-xs">
             {editingVariant 
-              ? "Variant bilgilerini güncelleyebilirsiniz."
-              : "Aktif parçaları kullanarak yeni bir variant oluşturabilirsiniz."}
+              ? "You can update the variant information."
+              : "You can create a new variant using the active pieces."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-1.5">
               <Label htmlFor="name" >
-                Variant Adı:
+                Variant Name:
               </Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Örn: Bed & Nightstand"
+                placeholder="Ex: Bed & Nightstand"
               />
             </div>
             
             <div className="grid gap-1.5">
               <Label >
-                Seçili Parçalar:
+              Selected Pieces:
               </Label>
               <div className="flex flex-wrap gap-2 min-h-[40px] p-2 border rounded-md">
                 {selectedPieceIds.map(pieceId => {
@@ -115,7 +109,7 @@ export function VariantDialog({ open, onOpenChange, onSubmit, availablePieces, e
                   onValueChange={setSelectedPiece}
                 >
                   <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Parça eklemek için seçin" />
+                    <SelectValue placeholder="Select to add a piece" />
                   </SelectTrigger>
                   <SelectContent>
                     {availablePieces
@@ -129,21 +123,21 @@ export function VariantDialog({ open, onOpenChange, onSubmit, availablePieces, e
                 </Select>
                 <Button
                   type="button"
-                  variant="secondary"
+                  variant="info"
                   onClick={handleAddPiece}
                   disabled={!selectedPiece}
                   className={!selectedPiece 
-                    ? "opacity-50" 
-                    : "bg-emerald-100 hover:bg-emerald-200 text-emerald-700"}
+                    ? "disabled opacity-50" 
+                    : ""}
                 >
-                  Ekle
+                  Add
                 </Button>
               </div>
             </div>
           </div>
           <DialogFooter>
             <Button type="submit" className="w-full sm:w-auto">
-              {editingVariant ? "Güncelle" : "Oluştur"}
+              {editingVariant ? "Update" : "Create"}
             </Button>
           </DialogFooter>
         </form>

@@ -9,9 +9,21 @@ import { NewPieceDialog } from "./new-piece-dialog"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { nanoid } from "nanoid"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export function PiecesList({ pieces, variants, onUpdate }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isAlertOpen, setIsAlertOpen] = useState(false)
+  const [pieceToDelete, setPieceToDelete] = useState(null)
   const { toast } = useToast()
 
   const handleAddPiece = (name, value) => {
@@ -23,26 +35,40 @@ export function PiecesList({ pieces, variants, onUpdate }) {
     }
     onUpdate([...pieces, newPiece])
     toast({
-      title: "Parça eklendi",
-      description: `${name} başarıyla eklendi.`
+      title: "The piece was added",
+      description: `${name} has been successfully added.`
     })
   }
 
+  
   const handleDeletePiece = (pieceId) => {
     const isUsedInVariant = variants.some(v => v.pieceIds.includes(pieceId))
     
     if (isUsedInVariant) {
-      if (!confirm("Bu parça bir veya daha fazla variantta kullanılıyor. Silmek istediğinizden emin misiniz?")) {
-        return
-      }
-      // Variantlardan da kaldırılmalı
-      const updatedVariants = variants.map(variant => ({
-        ...variant,
-        pieceIds: variant.pieceIds.filter(id => id !== pieceId)
-      }))
-      onUpdate(pieces.filter(p => p.id !== pieceId))
+      setPieceToDelete(pieceId)
+      setIsAlertOpen(true)
     } else {
       onUpdate(pieces.filter(p => p.id !== pieceId))
+      toast({
+        title: "Piece deleted",
+        description: "The piece has been successfully deleted."
+      })
+    }
+  }
+
+  const confirmDelete = () => {
+    if (pieceToDelete) {
+      const updatedVariants = variants.map(variant => ({
+        ...variant,
+        pieceIds: variant.pieceIds.filter(id => id !== pieceToDelete)
+      }))
+      onUpdate(pieces.filter(p => p.id !== pieceToDelete))
+      setPieceToDelete(null)
+      setIsAlertOpen(false)
+      toast({
+        title: "The piece was deleted",
+        description: "The piece was removed from the related variants and successfully deleted."
+      })
     }
   }
 
@@ -70,13 +96,13 @@ export function PiecesList({ pieces, variants, onUpdate }) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-        <CardTitle className="font-light" >Parçalar</CardTitle>
+        <CardTitle className="font-light" >Pieces</CardTitle>
         <Button
           variant="outline"
           onClick={() => setIsDialogOpen(true)}
         >
           <Plus className="mr-2 h-4 w-4" />
-          Parça Ekle
+          Add Piece
         </Button>
         </div>
       </CardHeader>
@@ -95,7 +121,7 @@ export function PiecesList({ pieces, variants, onUpdate }) {
             <Input
               value={piece.value}
               onChange={(e) => handleValueChange(piece.id, e.target.value)}
-              placeholder="SKU değeri"
+              placeholder="SKU suffix"
               className="min-w-24 w-44"
             />
             <Button
@@ -108,6 +134,9 @@ export function PiecesList({ pieces, variants, onUpdate }) {
             </Button>
           </div>
         ))}
+          {
+          pieces?.length === 0 && <div className="text-center text-sm">No pieces for this product</div>
+        }
       </CardContent>
 
       <NewPieceDialog
@@ -115,6 +144,28 @@ export function PiecesList({ pieces, variants, onUpdate }) {
         onOpenChange={setIsDialogOpen}
         onSubmit={handleAddPiece}
       />
+
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Piece</AlertDialogTitle>
+            <AlertDialogDescription>
+              This piece is used in one or more variants. Deleting it will also remove it from those variants. Are you sure you want to continue?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => {
+              setPieceToDelete(null)
+              setIsAlertOpen(false)
+            }}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>
+              Yes, delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   )
 } 

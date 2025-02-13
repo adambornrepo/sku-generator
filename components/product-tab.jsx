@@ -10,10 +10,12 @@ import { SkuTable } from "./sku-table"
 import { useToast } from "@/hooks/use-toast"
 import { useState } from "react"
 import { Label } from "@/components/ui/label"
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel, AlertDialogFooter } from "@/components/ui/alert-dialog"
 
 export function ProductTab({ product, onUpdate, onDelete }) {
   const { toast } = useToast()
   const [localProduct, setLocalProduct] = useState(product)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleInputChange = (field, value) => {
     const updatedProduct = { ...localProduct, [field]: value }
@@ -22,23 +24,22 @@ export function ProductTab({ product, onUpdate, onDelete }) {
   }
 
   const handleDeleteProduct = () => {
-    if (localProduct.variants.length > 0) {
-      if (!confirm("Bu ürünü silmek istediğinizden emin misiniz? Tüm variantlar silinecektir.")) {
-        return
-      }
-    }
     onDelete(localProduct.id)
     toast({
-      title: "Ürün silindi",
-      description: `${localProduct.name} başarıyla silindi.`
+      title: "Product deleted",
+      description: `${localProduct.name} has been successfully deleted.`
     })
+    setIsDialogOpen(false)
   }
 
   const generateSkuForVariant = (variant) => {
     const pieces = variant.pieceIds
       .map(pieceId => {
         const piece = localProduct.pieces.find(p => p.id === pieceId)
-        return piece ? `${localProduct.baseSku}${piece.value}` : ""
+
+        if(!piece || !piece.isActive) return "";
+
+        return `${localProduct.baseSku}${piece.value}`;
       })
       .filter(Boolean)
 
@@ -52,21 +53,33 @@ export function ProductTab({ product, onUpdate, onDelete }) {
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle className="font-light">Tanımlamalar</CardTitle>
-            <Button 
-              variant="destructive" 
-              onClick={handleDeleteProduct}
-              className="ml-4"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Ürünü Sil
-            </Button>
+            <CardTitle className="font-light">Definitions</CardTitle>
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="ml-4">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Product
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Product</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete this product? All variants will be deleted.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteProduct}>Yes, delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div className="space-y-1">
-              <Label htmlFor="name" >İsim:</Label>
+              <Label htmlFor="name" >Name:</Label>
               <Input
                 id="name"
                 value={localProduct.name}
@@ -82,7 +95,7 @@ export function ProductTab({ product, onUpdate, onDelete }) {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="delimiter" >Ayraç:</Label>
+              <Label htmlFor="delimiter" >Delimiter:</Label>
               <Input
                 id="delimiter"
                 value={localProduct.delimiter}
@@ -90,7 +103,7 @@ export function ProductTab({ product, onUpdate, onDelete }) {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="setPrefix" >Set Öneki:</Label>
+              <Label htmlFor="setPrefix" >Set Prefix:</Label>
               <Input
                 id="setPrefix"
                 value={localProduct.setPrefix}
